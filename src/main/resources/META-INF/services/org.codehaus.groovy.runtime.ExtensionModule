@@ -1,0 +1,3 @@
+moduleName=grace-inertia-module
+moduleVersion=1.0
+extensionClasses=org.graceframework.plugins.inertia.HttpServletRequestExtension,org.graceframework.plugins.inertia.HttpServletResponseExtension
