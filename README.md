@@ -7,6 +7,59 @@
 Grace Plugin for using Grace/Grails app with [Inertia.js](https://inertiajs.com).
 
 
+## Usage
+
+Add dependency to the `build.gradle`,
+
+```gradle
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.graceframework.plugins:inertia:VERSION"
+}
+```
+
+Inertia plugin supports controller-specific `withFormat()` method,
+
+```groovy
+class BookController {
+
+    def list() {
+        def books = Book.list()
+
+        withFormat {
+            inertia {
+                render(inertia: "Book/List", props: [bookList: books])
+            }
+            json {
+                render books as JSON
+            }
+        }
+    }
+}
+```
+
+Also, this plugin supports extendsions for Grails Request and Response,
+
+```groovy
+// You can get Inertia request headers from Grails Request
+
+request.inertia.version == request.getHeader('X-Inertia-Version')
+
+// Check Inertia request?
+if (request.inertia as boolean) { // or use request.isInertia()
+    template = 'book-detail'
+}
+
+// You can set Inertia response headers in Grails
+
+response.inertia.location = 'http://localhost:8080/book/1'
+
+```
+
 ## Development
 
 ### Build from source
