@@ -27,6 +27,4 @@ public class InertiaMimeType {
 
     public static final String INERTIA_FORMAT = "inertia";
 
-    public static final MimeType INERTIA = new MimeType("application/json", "inertia");
-
 }

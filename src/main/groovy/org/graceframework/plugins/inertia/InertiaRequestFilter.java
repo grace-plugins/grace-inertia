@@ -42,7 +42,7 @@ public class InertiaRequestFilter extends OncePerRequestFilter {
 
         request.setAttribute(GrailsApplicationAttributes.CONTENT_FORMAT, InertiaMimeType.INERTIA_FORMAT);
         request.setAttribute(GrailsApplicationAttributes.RESPONSE_FORMAT, InertiaMimeType.INERTIA_FORMAT);
-        request.setAttribute(GrailsApplicationAttributes.RESPONSE_MIME_TYPE, InertiaMimeType.INERTIA);
+        request.setAttribute(GrailsApplicationAttributes.RESPONSE_MIME_TYPE, MimeType.JSON);
 
         filterChain.doFilter(request, response);
     }
