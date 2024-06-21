@@ -15,7 +15,7 @@ ext."signing.secretKeyRingFile" = project.hasProperty("signing.secretKeyRingFile
 ext.isReleaseVersion = !projectVersion.endsWith("SNAPSHOT")
 
 ext {
-    convertersVersion = '2.6.6'
+    convertersVersion = '5.0.0'
     springBootVersion = '2.6.6'
     servletVersion = '4.0.1'
 }
@@ -39,7 +39,9 @@ dependencies {
     compileOnly "javax.servlet:javax.servlet-api:$servletVersion"
     compileOnly "org.graceframework:grace-core:$graceVersion"
     compileOnly "org.graceframework:grace-plugin-controllers:$graceVersion"
-    compileOnly "org.grails.plugins:converters:$convertersVersion"
+    compileOnly "org.grails.plugins:converters:$convertersVersion", {
+        transitive = false
+    }
     compileOnly "org.graceframework:grace-web-common:$graceVersion"
 }
 
