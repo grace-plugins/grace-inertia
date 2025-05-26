@@ -1,3 +1,0 @@
-<plugin name='inertia'>
-  <type>org.graceframework.plugins.inertia.InertiaGrailsPlugin</type>
-</plugin>

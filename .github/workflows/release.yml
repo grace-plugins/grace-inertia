@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: ['8']
+        java: ['11']
     env:
       GIT_USER_NAME: rainboyan
       GIT_USER_EMAIL: rain@rainboyan.com
@@ -70,4 +70,4 @@ jobs:
           SIGNING_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
           SECRING_FILE: ${{ secrets.SECRING_FILE }}
         with:
-          arguments: -Psigning.secretKeyRingFile=${{ github.workspace }}/secring.gpg publishToSonatype closeAndReleaseSonatypeStagingRepository
+          arguments: -Psigning.secretKeyRingFile=${{ github.workspace }}/secring.gpg :plugin:publishToSonatype closeAndReleaseSonatypeStagingRepository

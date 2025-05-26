@@ -1,4 +1,4 @@
-package org.graceframework.plugins.inertia
+package grace.demos
 
 class BootStrap {
 

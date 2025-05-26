@@ -1,1 +1,3 @@
-rootProject.name = 'inertia'
+rootProject.name = 'grace-inertia'
+
+include 'plugin'
