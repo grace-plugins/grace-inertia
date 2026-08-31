@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2024-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.graceframework.plugins.inertia
 import javax.servlet.http.HttpServletRequest
 
 import groovy.transform.CompileStatic
+import org.springframework.web.util.UrlPathHelper
 
 /**
  * Extends the {@link HttpServletRequest} object with new methods for handling Inertia Request
@@ -34,6 +35,15 @@ class HttpServletRequestExtension {
 
     static boolean isInertia(HttpServletRequest request) {
         Boolean.parseBoolean(request.getHeader(InertiaRequest.X_INERTIA))
+    }
+
+    static String getUrl(HttpServletRequest request) {
+        String requestUri = UrlPathHelper.defaultInstance.getRequestUri(request)
+        String queryString = UrlPathHelper.defaultInstance.getOriginatingQueryString(request)
+        if (queryString) {
+            return requestUri + '?' + queryString
+        }
+        requestUri
     }
 
 }

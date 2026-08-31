@@ -15,21 +15,18 @@
  */
 package org.graceframework.plugins.inertia;
 
+import grails.rest.render.RendererRegistry;
+
 /**
- * Settings for Inertia
+ * Add InertiaPageRenderer as container renderer.
  *
  * @author Michael Yan
  * @since 0.5
  */
-public final class InertiaSettings {
+public class InertiaPageRendererRegister {
 
-    public static final String INERTIA_ENABLED = "grails.inertia.enabled";
-    public static final String INERTIA_ASSET_URL = "grails.inertia.asset.url";
-    public static final String INERTIA_ASSET_VERSION = "grails.inertia.asset.version";
-    public static final String INERTIA_MANIFEST_LOCATION = "grails.inertia.manifest.location";
-    public static final String INERTIA_MANIFEST_OBJECT = "inertiaManifest";
-    public static final String INERTIA_TEMPLATE = "grails.inertia.template";
-    public static final String INERTIA_TEMPLATE_DEFAULT = "/templates/inertia";
-    public static final String INERTIA_PAGE_ATTRIBUTE = "grails.inertia.page.attribute";
+    public InertiaPageRendererRegister(RendererRegistry rendererRegistry, InertiaPageRenderer inertiaPageRenderer) {
+        rendererRegistry.addContainerRenderer(InertiaPage.class, inertiaPageRenderer);
+    }
 
 }

@@ -17,14 +17,20 @@ package org.graceframework.plugins.inertia;
 
 import javax.servlet.DispatcherType;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.context.annotation.Bean;
 
+import grails.core.GrailsApplication;
+import grails.rest.render.RendererRegistry;
+
+import org.grails.plugins.web.GroovyPagesAutoConfiguration;
 import org.grails.plugins.web.mime.MimeTypesConfiguration;
 
 /**
@@ -34,7 +40,7 @@ import org.grails.plugins.web.mime.MimeTypesConfiguration;
  * @since 0.1
  */
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@AutoConfiguration(before = { MimeTypesConfiguration.class })
+@AutoConfiguration(before = { MimeTypesConfiguration.class, GroovyPagesAutoConfiguration.class })
 public class InertiaAutoConfiguration {
 
     @Bean
@@ -50,6 +56,27 @@ public class InertiaAutoConfiguration {
     @Bean
     public InertiaMimeTypeProvider inertiaMimeTypeProvider() {
         return new InertiaMimeTypeProvider();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public InertiaVersionProvider inertiaVersionProvider(ObjectProvider<GrailsApplication> grailsApplicationObjectProvider) {
+        return new InertiaVersionProvider(grailsApplicationObjectProvider.getIfAvailable());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public InertiaPageRendererRegister inertiaPageRendererRegister(
+            ObjectProvider<GrailsApplication> grailsApplicationProvider,
+            ObjectProvider<InertiaVersionProvider> inertiaVersionProvider,
+            ObjectProvider<RendererRegistry> rendererRegistry) {
+
+        InertiaPageRenderer inertiaPageRenderer = new InertiaPageRenderer(
+                InertiaPage.class,
+                grailsApplicationProvider.getIfAvailable(),
+                inertiaVersionProvider.getIfAvailable());
+
+        return new InertiaPageRendererRegister(rendererRegistry.getIfAvailable(), inertiaPageRenderer);
     }
 
 }

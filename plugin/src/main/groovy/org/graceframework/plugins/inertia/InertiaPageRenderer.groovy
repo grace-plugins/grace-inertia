@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2024-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,78 +19,83 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import groovy.transform.CompileStatic
-import groovy.transform.Generated
+import org.springframework.http.HttpStatus
 
-import grails.artefact.Enhances
+import grails.config.Config
 import grails.converters.JSON
-import grails.web.api.WebAttributes
+import grails.core.GrailsApplication
+import grails.rest.render.AbstractRenderer
+import grails.rest.render.RenderContext
+import grails.util.GrailsWebUtil
+import grails.web.http.HttpHeaders
+import grails.web.mime.MimeType
+
+import org.grails.plugins.web.rest.render.ServletRenderContext
+import org.grails.web.sitemesh.GrailsLayoutDecoratorMapper
+import org.grails.web.util.GrailsApplicationAttributes
 
 /**
- * A trait that adds behavior to allow rendering Inertia page object to the response
  *
  * @author Michael Yan
- * @since 0.2
+ * @since 0.5
  */
 @CompileStatic
-@Enhances(['Controller', 'Interceptor'])
-trait InertiaPageRenderer extends WebAttributes {
+class InertiaPageRenderer extends AbstractRenderer<InertiaPage> {
 
-    @Generated
-    void render(String component, Map props) {
-        webRequest.renderView = false
+    public static final MimeType[] INERTIA_MIME_TYPES = [MimeType.ALL, MimeType.HTML, MimeType.JSON] as MimeType[]
 
-        if (isInertia()) {
-            renderJson(component, props)
-        }
-        else if (isSsrEnabled()) {
-            renderSsr(component, props)
-        }
-        else {
-            renderHtml(component, props)
-        }
+    private GrailsApplication grailsApplication
+    private Config config
+    private InertiaVersionProvider inertiaVersionProvider
+
+    InertiaPageRenderer(Class<InertiaPage> targetType, GrailsApplication grailsApplication,
+            InertiaVersionProvider inertiaVersionProvider) {
+        super(targetType, INERTIA_MIME_TYPES)
+        this.grailsApplication = grailsApplication
+        this.config = grailsApplication.config
+        this.inertiaVersionProvider = inertiaVersionProvider
     }
 
-    private void renderJson(String component, Map props) {
-        HttpServletRequest request = webRequest.currentRequest
-        HttpServletResponse response = webRequest.currentResponse
-
-        String method = request.method
-        String version = grailsApplication.getConfig().getProperty('inertia.version', '1.0')
-        String assetVersion = request.getHeader(InertiaRequest.X_INERTIA_VERSION)
-        if (method.toUpperCase() == 'GET' && version != assetVersion) {
-            response.setHeader(InertiaRequest.X_INERTIA_LOCATION, request.requestURL.toString())
-            response.setStatus(409)
-            return
-        }
-
-        response.setHeader('Vary', 'Accept')
-        response.setHeader(InertiaRequest.X_INERTIA, 'true')
+    @Override
+    void render(InertiaPage object, RenderContext context) {
+        ServletRenderContext renderContext = (ServletRenderContext) context
+        HttpServletRequest request = renderContext.getWebRequest().request
+        HttpServletResponse response = renderContext.getWebRequest().response
 
         Map<String, Object> inertiaPage = new LinkedHashMap<>()
-        inertiaPage.component = component
-        inertiaPage.props = props
-        inertiaPage.url = request.requestURL
-        inertiaPage.version = version
-
+        inertiaPage.component = object.component ?: "${context.controllerName}/${context.actionName}"
+        inertiaPage.props = object.getProps()
+        inertiaPage.url = HttpServletRequestExtension.getUrl(request)
+        inertiaPage.version = this.inertiaVersionProvider.version
         JSON json = new JSON(inertiaPage)
-        json.render response
+
+        if (isInertiaRequest(request)) {
+            response.setHeader(HttpHeaders.VARY, InertiaRequest.X_INERTIA)
+            response.setHeader(InertiaRequest.X_INERTIA, 'true')
+            context.setContentType(GrailsWebUtil.getContentType(MimeType.JSON.name, GrailsWebUtil.DEFAULT_ENCODING))
+            context.setStatus(HttpStatus.OK)
+            json.render(context.writer)
+        }
+        else {
+            context.setContentType(MimeType.HTML.name)
+            String viewName = this.config.getProperty(InertiaSettings.INERTIA_TEMPLATE, String, InertiaSettings.INERTIA_TEMPLATE_DEFAULT)
+            context.viewName = viewName
+            context.setModel(object.getViewData())
+
+            String page = json.toString()
+            request.setAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, page)
+            request.setAttribute(GrailsApplicationAttributes.CONTROLLER, null)
+            request.setAttribute(GrailsApplicationAttributes.CONTROLLER_NAME_ATTRIBUTE, null)
+            request.setAttribute GrailsLayoutDecoratorMapper.LAYOUT_ATTRIBUTE, GrailsLayoutDecoratorMapper.NONE_LAYOUT
+            response.setContentType GrailsWebUtil.getContentType(MimeType.HTML.name, GrailsWebUtil.DEFAULT_ENCODING)
+
+            response.status = 200
+            context.setModel(inertiaPage)
+        }
     }
 
-    private void renderSsr(String component, Map props) {
-        String ssrUrl = grailsApplication.getConfig().getProperty('inertia.ssr.url', 'http://localhost:13714')
-    }
-
-    private void renderHtml(String component, Map props) {
-
-    }
-
-    private boolean isInertia() {
-        return Boolean.parseBoolean(webRequest.currentRequest.getHeader(InertiaRequest.X_INERTIA))
-    }
-
-    private boolean isSsrEnabled() {
-        String enabled = grailsApplication.getConfig().getProperty('inertia.ssr.enabled', 'false')
-        return Boolean.parseBoolean(enabled)
+    private boolean isInertiaRequest(HttpServletRequest request) {
+        return HttpServletRequestExtension.isInertia(request)
     }
 
 }

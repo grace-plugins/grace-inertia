@@ -30,6 +30,7 @@ dependencies {
     compileOnly "org.graceframework:grace-plugin-controllers"
     compileOnly "org.graceframework:grace-plugin-converters"
     compileOnly "org.graceframework:grace-plugin-mimetypes"
+    compileOnly "org.graceframework:grace-plugin-rest"
     compileOnly "org.graceframework:grace-web-common"
 }
 
