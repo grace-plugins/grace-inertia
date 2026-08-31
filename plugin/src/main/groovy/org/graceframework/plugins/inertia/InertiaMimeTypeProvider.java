@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2024-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,19 @@
 package org.graceframework.plugins.inertia;
 
 import grails.web.mime.MimeType;
+import grails.web.mime.MimeTypeProvider;
 
 /**
- * {@link MimeType} for Inertia
+ * {@link MimeTypeProvider} for Inertia
  *
  * @author Michael Yan
- * @since 0.1
+ * @since 0.5
  */
-public class InertiaMimeType {
+public class InertiaMimeTypeProvider implements MimeTypeProvider {
 
-    public static final String INERTIA_FORMAT = "inertia";
-
-    public static final MimeType INERTIA_HTML = new MimeType("text/html", "inertia");
-
-    public static final MimeType INERTIA_JSON = new MimeType("application/json", "inertia");
+    @Override
+    public MimeType[] getMimeTypes() {
+        return new MimeType[] { InertiaMimeType.INERTIA_HTML, InertiaMimeType.INERTIA_JSON };
+    }
 
 }

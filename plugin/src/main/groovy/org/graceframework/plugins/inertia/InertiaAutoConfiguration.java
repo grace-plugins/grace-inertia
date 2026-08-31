@@ -34,7 +34,7 @@ import org.grails.plugins.web.mime.MimeTypesConfiguration;
  * @since 0.1
  */
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@AutoConfiguration(before = MimeTypesConfiguration.class)
+@AutoConfiguration(before = { MimeTypesConfiguration.class })
 public class InertiaAutoConfiguration {
 
     @Bean
@@ -45,6 +45,11 @@ public class InertiaAutoConfiguration {
         registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ASYNC);
         registration.setOrder(OrderedFilter.REQUEST_WRAPPER_FILTER_MAX_ORDER + 100);
         return registration;
+    }
+
+    @Bean
+    public InertiaMimeTypeProvider inertiaMimeTypeProvider() {
+        return new InertiaMimeTypeProvider();
     }
 
 }
