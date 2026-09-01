@@ -123,6 +123,7 @@ trait InertiaTrait {
             response.setHeader(HttpHeaders.VARY, InertiaRequest.X_INERTIA)
             response.setHeader(InertiaRequest.X_INERTIA, 'true')
             JSON json = new JSON(inertiaPage)
+            json.setExcludes(['viewData'])
             json.render response
             webRequest.renderView = false
         }
@@ -143,6 +144,7 @@ trait InertiaTrait {
                 model = [:]
             }
             JSON json = new JSON(inertiaPage)
+            json.setExcludes(['viewData'])
             String page = json.toString()
             request.setAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, page)
             request.setAttribute(GrailsApplicationAttributes.CONTROLLER, null)
