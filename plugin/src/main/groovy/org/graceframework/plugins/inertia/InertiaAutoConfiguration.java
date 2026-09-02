@@ -15,6 +15,8 @@
  */
 package org.graceframework.plugins.inertia;
 
+import java.util.List;
+
 import javax.servlet.DispatcherType;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -26,6 +28,9 @@ import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFi
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import grails.core.GrailsApplication;
 import grails.rest.render.RendererRegistry;
@@ -77,6 +82,34 @@ public class InertiaAutoConfiguration {
                 inertiaVersionProvider.getIfAvailable());
 
         return new InertiaPageRendererRegister(rendererRegistry.getIfAvailable(), inertiaPageRenderer);
+    }
+
+    @Bean
+    public InertiaWebMvcConfigurer inertiaWebMvcConfigurer(InertiaVersionProvider inertiaVersionProvider) {
+        return new InertiaWebMvcConfigurer(inertiaVersionProvider);
+    }
+
+    /**
+     * {@link WebMvcConfigurer} to add Inertia interceptors and return value handlers.
+     */
+    static class InertiaWebMvcConfigurer implements WebMvcConfigurer {
+
+        private final InertiaVersionProvider inertiaVersionProvider;
+
+        public InertiaWebMvcConfigurer(InertiaVersionProvider inertiaVersionProvider) {
+            this.inertiaVersionProvider = inertiaVersionProvider;
+        }
+
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(new InertiaHandlerInterceptor());
+        }
+
+        @Override
+        public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+            handlers.add(new InertiaPageMethodReturnValueHandler(this.inertiaVersionProvider));
+        }
+
     }
 
 }

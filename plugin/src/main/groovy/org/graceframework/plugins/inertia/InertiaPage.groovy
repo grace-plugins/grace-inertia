@@ -15,14 +15,17 @@
  */
 package org.graceframework.plugins.inertia
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.builder.Builder
 
 /**
+ * Inertia page object.
  *
  * @author Michael Yan
  * @since 0.5
  */
 @Builder
+@JsonIgnoreProperties(value = ['viewData'])
 class InertiaPage {
 
     public static final String INERTIA = "inertia"
@@ -52,6 +55,9 @@ class InertiaPage {
      */
     String version
 
+    /**
+     * The view data.
+     */
     Map<String, Object> viewData
 
     InertiaPage(String component) {
@@ -61,6 +67,16 @@ class InertiaPage {
     InertiaPage(String component, Map<String, Object> props) {
         this.component = component
         this.props = props
+    }
+
+    InertiaPage url(String url) {
+        this.url = url
+        this
+    }
+
+    InertiaPage props(Map props) {
+        this.props = props
+        this
     }
 
     InertiaPage viewData(Map viewData) {
@@ -73,10 +89,6 @@ class InertiaPage {
     }
 
     static InertiaPage of(Map props) {
-        new InertiaPage(null, props)
-    }
-
-    static InertiaPage props(Map props) {
         new InertiaPage(null, props)
     }
 

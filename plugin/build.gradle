@@ -35,6 +35,7 @@ dependencies {
     compileOnly "org.graceframework:grace-plugin-mimetypes"
     compileOnly "org.graceframework:grace-plugin-rest"
     compileOnly "org.graceframework:grace-web-common"
+    compileOnly "com.fasterxml.jackson.core:jackson-databind"
 }
 
 tasks.withType(Sign) {
