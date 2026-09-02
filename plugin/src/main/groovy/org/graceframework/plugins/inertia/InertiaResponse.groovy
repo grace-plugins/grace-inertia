@@ -19,8 +19,6 @@ import javax.servlet.http.HttpServletResponse
 
 import groovy.transform.CompileStatic
 
-import static org.graceframework.plugins.inertia.InertiaRequest.*
-
 /**
  * Inertia Response {link https://inertiajs.com/the-protocol#inertia-responses}
  *
@@ -43,7 +41,7 @@ class InertiaResponse {
      * @param location
      */
     void setLocation(String location) {
-        setHeaderValue(X_INERTIA_LOCATION, location)
+        setHeaderValue(InertiaHeaders.X_INERTIA_LOCATION, location)
     }
 
     void setHeaderValue(String name, Object value) {

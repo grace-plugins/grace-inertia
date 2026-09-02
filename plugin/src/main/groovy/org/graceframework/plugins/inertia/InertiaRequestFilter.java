@@ -49,7 +49,7 @@ public class InertiaRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !Boolean.parseBoolean(request.getHeader(InertiaRequest.X_INERTIA));
+        return !Boolean.parseBoolean(request.getHeader(InertiaHeaders.X_INERTIA));
     }
 
 }

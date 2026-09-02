@@ -70,17 +70,20 @@ class InertiaPageRenderer extends AbstractRenderer<InertiaPage> {
         JSON json = new JSON(inertiaPage)
 
         if (isInertiaRequest(request)) {
-            response.setHeader(HttpHeaders.VARY, InertiaRequest.X_INERTIA)
-            response.setHeader(InertiaRequest.X_INERTIA, 'true')
+            response.setHeader(HttpHeaders.VARY, InertiaHeaders.X_INERTIA)
+            response.setHeader(InertiaHeaders.X_INERTIA, 'true')
             context.setContentType(GrailsWebUtil.getContentType(MimeType.JSON.name, GrailsWebUtil.DEFAULT_ENCODING))
             context.setStatus(HttpStatus.OK)
             json.render(context.writer)
         }
         else {
+            Map<String, Object> model = new LinkedHashMap<>()
+            model.put("page", inertiaPage)
+            model.putAll(object.viewData)
             context.setContentType(MimeType.HTML.name)
             String viewName = this.config.getProperty(InertiaSettings.INERTIA_TEMPLATE, String, InertiaSettings.INERTIA_TEMPLATE_DEFAULT)
             context.viewName = viewName
-            context.setModel(object.getViewData())
+            context.setModel(model)
 
             String page = json.toString()
             request.setAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, page)

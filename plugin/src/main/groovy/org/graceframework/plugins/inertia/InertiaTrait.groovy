@@ -120,8 +120,8 @@ trait InertiaTrait {
         boolean isInertiaRequest = isInertiaRequest(request)
         if (isInertiaRequest) {
             response.setContentType GrailsWebUtil.getContentType(MimeType.JSON.name, GrailsWebUtil.DEFAULT_ENCODING)
-            response.setHeader(HttpHeaders.VARY, InertiaRequest.X_INERTIA)
-            response.setHeader(InertiaRequest.X_INERTIA, 'true')
+            response.setHeader(HttpHeaders.VARY, InertiaHeaders.X_INERTIA)
+            response.setHeader(InertiaHeaders.X_INERTIA, 'true')
             JSON json = new JSON(inertiaPage)
             json.setExcludes(['viewData'])
             json.render response

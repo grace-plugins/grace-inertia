@@ -28,12 +28,6 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class InertiaRequest {
 
-    public static final String X_INERTIA = 'X-Inertia'
-    public static final String X_INERTIA_VERSION = 'X-Inertia-Version'
-    public static final String X_INERTIA_LOCATION = 'X-Inertia-Location'
-    public static final String X_INERTIA_PARTIAL_DATA = 'X-Inertia-Partial-Data'
-    public static final String X_INERTIA_PARTIAL_COMPONENT = 'X-Inertia-Partial-Component'
-
     private final HttpServletRequest request
 
     InertiaRequest(HttpServletRequest request) {
@@ -44,7 +38,7 @@ class InertiaRequest {
      * Indicates that the request is via an element using X-Inertia
      */
     boolean isInertia() {
-        Boolean.parseBoolean(getHeaderValue(X_INERTIA))
+        Boolean.parseBoolean(getHeaderValue(InertiaHeaders.X_INERTIA))
     }
 
     /**

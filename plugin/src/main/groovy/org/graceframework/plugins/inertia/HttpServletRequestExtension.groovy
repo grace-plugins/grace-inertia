@@ -34,7 +34,7 @@ class HttpServletRequestExtension {
     }
 
     static boolean isInertia(HttpServletRequest request) {
-        Boolean.parseBoolean(request.getHeader(InertiaRequest.X_INERTIA))
+        Boolean.parseBoolean(request.getHeader(InertiaHeaders.X_INERTIA))
     }
 
     static String getUrl(HttpServletRequest request) {

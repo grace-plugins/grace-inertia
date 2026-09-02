@@ -155,7 +155,7 @@ public class Inertia {
      * @return true If the request is Inertia else false
      */
     public static boolean isInertiaRequest(HttpServletRequest request) {
-        return Boolean.parseBoolean(request.getHeader(InertiaRequest.X_INERTIA));
+        return Boolean.parseBoolean(request.getHeader(InertiaHeaders.X_INERTIA));
     }
 
 }
