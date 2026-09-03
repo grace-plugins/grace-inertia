@@ -36,8 +36,8 @@ public class InertiaHandlerInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler, @Nullable ModelAndView modelAndView) {
         if (Inertia.isInertiaRequest(request)) {
-            response.setHeader(VARY, InertiaHeaders.X_INERTIA);
-            response.setHeader(InertiaHeaders.X_INERTIA, "true");
+            response.setHeader(VARY, InertiaHeaders.INERTIA);
+            response.setHeader(InertiaHeaders.INERTIA, "true");
         }
     }
 

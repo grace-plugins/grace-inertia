@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2024-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class InertiaResponse {
      * @param location
      */
     void setLocation(String location) {
-        setHeaderValue(InertiaHeaders.X_INERTIA_LOCATION, location)
+        setHeaderValue(InertiaHeaders.INERTIA_LOCATION, location)
     }
 
     void setHeaderValue(String name, Object value) {

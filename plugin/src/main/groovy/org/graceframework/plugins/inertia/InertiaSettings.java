@@ -31,5 +31,9 @@ public final class InertiaSettings {
     public static final String INERTIA_TEMPLATE = "grails.inertia.template";
     public static final String INERTIA_TEMPLATE_DEFAULT = "/templates/inertia";
     public static final String INERTIA_PAGE_ATTRIBUTE = "grails.inertia.page.attribute";
+    public static final String INERTIA_SSR_TEMPLATE = "grails.inertia.ssr.template";
+    public static final String INERTIA_SSR_TEMPLATE_DEFAULT = "/templates/inertia_ssr";
+    public static final String INERTIA_SSR_ENABLED = "grails.inertia.ssr.enabled";
+    public static final String INERTIA_SSR_URL = "grails.inertia.ssr.url";
 
 }

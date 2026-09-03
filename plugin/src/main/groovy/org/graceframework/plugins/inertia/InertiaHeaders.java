@@ -23,10 +23,10 @@ package org.graceframework.plugins.inertia;
  */
 public abstract class InertiaHeaders {
 
-    public static final String X_INERTIA = "X-Inertia";
-    public static final String X_INERTIA_VERSION = "X-Inertia-Version";
-    public static final String X_INERTIA_LOCATION = "X-Inertia-Location";
-    public static final String X_INERTIA_PARTIAL_DATA = "X-Inertia-Partial-Data";
-    public static final String X_INERTIA_PARTIAL_COMPONENT = "X-Inertia-Partial-Component";
+    public static final String INERTIA = "X-Inertia";
+    public static final String INERTIA_VERSION = "X-Inertia-Version";
+    public static final String INERTIA_LOCATION = "X-Inertia-Location";
+    public static final String INERTIA_PARTIAL_DATA = "X-Inertia-Partial-Data";
+    public static final String INERTIA_PARTIAL_COMPONENT = "X-Inertia-Partial-Component";
 
 }

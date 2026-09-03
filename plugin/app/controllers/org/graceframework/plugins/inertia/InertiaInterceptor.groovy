@@ -46,8 +46,8 @@ class InertiaInterceptor {
 
         if (isInertiaRequest()) {
             if (isGetRequest() && isVersionStale()) {
-                header(InertiaHeaders.X_INERTIA_LOCATION, webRequest.currentRequest.forwardURI)
-                header(InertiaHeaders.X_INERTIA_VERSION, assetVersion)
+                header(InertiaHeaders.INERTIA_LOCATION, webRequest.currentRequest.forwardURI)
+                header(InertiaHeaders.INERTIA_VERSION, assetVersion)
                 render(status: HttpStatus.CONFLICT.value())
                 return false
             }
@@ -77,7 +77,7 @@ class InertiaInterceptor {
     }
 
     private boolean isVersionStale() {
-        String clientVersion = request.getHeader(InertiaHeaders.X_INERTIA_VERSION)
+        String clientVersion = request.getHeader(InertiaHeaders.INERTIA_VERSION)
         String serverVersion = getVersionProvider()?.version
         clientVersion != serverVersion
     }

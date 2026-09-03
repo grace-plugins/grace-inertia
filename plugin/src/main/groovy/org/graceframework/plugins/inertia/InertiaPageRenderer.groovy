@@ -70,8 +70,8 @@ class InertiaPageRenderer extends AbstractRenderer<InertiaPage> {
         JSON json = new JSON(inertiaPage)
 
         if (isInertiaRequest(request)) {
-            response.setHeader(HttpHeaders.VARY, InertiaHeaders.X_INERTIA)
-            response.setHeader(InertiaHeaders.X_INERTIA, 'true')
+            response.setHeader(HttpHeaders.VARY, InertiaHeaders.INERTIA)
+            response.setHeader(InertiaHeaders.INERTIA, 'true')
             context.setContentType(GrailsWebUtil.getContentType(MimeType.JSON.name, GrailsWebUtil.DEFAULT_ENCODING))
             context.setStatus(HttpStatus.OK)
             json.render(context.writer)
