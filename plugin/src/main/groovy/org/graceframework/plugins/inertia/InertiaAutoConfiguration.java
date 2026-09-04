@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
 import grails.core.GrailsApplication;
 import grails.rest.render.RendererRegistry;
@@ -85,9 +86,11 @@ public class InertiaAutoConfiguration {
         return new InertiaPageRendererRegister(rendererRegistry.getIfAvailable(), inertiaPageRenderer);
     }
 
-    @Bean
-    public InertiaView inertiaView(ApplicationContext applicationContext, InertiaVersionProvider inertiaVersionProvider) {
-        return new InertiaView(applicationContext, inertiaVersionProvider);
+    @ConditionalOnMissingBean
+    @Bean(name = InertiaView.INERTIA_VIEW_NAME)
+    public InertiaView inertiaView(ApplicationContext applicationContext,
+            ContentNegotiatingViewResolver viewResolver, InertiaVersionProvider inertiaVersionProvider) {
+        return new InertiaView(applicationContext, viewResolver, inertiaVersionProvider);
     }
 
     @Bean
@@ -102,7 +105,7 @@ public class InertiaAutoConfiguration {
 
         private final InertiaVersionProvider inertiaVersionProvider;
 
-        public InertiaWebMvcConfigurer(InertiaVersionProvider inertiaVersionProvider) {
+        InertiaWebMvcConfigurer(InertiaVersionProvider inertiaVersionProvider) {
             this.inertiaVersionProvider = inertiaVersionProvider;
         }
 

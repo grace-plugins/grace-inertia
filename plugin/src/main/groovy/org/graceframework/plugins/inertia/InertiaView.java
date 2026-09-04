@@ -16,8 +16,7 @@
 package org.graceframework.plugins.inertia;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,12 +25,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractView;
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
 /**
  * View for using Inertia with Spring MVC.
@@ -41,22 +40,19 @@ import org.springframework.web.servlet.view.AbstractView;
  */
 public class InertiaView extends AbstractView {
 
-    public static final String INERTIA_VIEW = "inertiaView";
+    public static final String INERTIA_VIEW_NAME = "inertiaView";
+    private static final String INERTIA_TEMPLATE_NAME = "inertia";
 
-    private static final String INERTIA_TEMPLATE_LOCATION = "classpath:/templates/inertia/inertia.html";
-    private static final String INERTIA_TEMPLATE_PLACEHOLDER = "@inertia";
-    private static final String INERTIA_ROOT_TAG = "<div id='app' data-page='%s'></div>";
-
-    private final String template;
+    private final ContentNegotiatingViewResolver viewResolver;
     private final ObjectMapper objectMapper;
     private final InertiaVersionProvider inertiaVersionProvider;
 
-    public InertiaView(ApplicationContext applicationContext, InertiaVersionProvider inertiaVersionProvider) {
+    public InertiaView(ApplicationContext applicationContext, ContentNegotiatingViewResolver viewResolver, InertiaVersionProvider inertiaVersionProvider) {
         setApplicationContext(applicationContext);
+        this.viewResolver = viewResolver;
         this.inertiaVersionProvider = inertiaVersionProvider;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        this.template = createTemplate(INERTIA_TEMPLATE_LOCATION);
     }
 
     @Override
@@ -64,22 +60,25 @@ public class InertiaView extends AbstractView {
     protected void renderMergedOutputModel(Map<String, Object> model,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
         InertiaPage inertiaPage = InertiaPage
-                .of((String) model.get(InertiaPage.COMPONENT))
-                .props((Map<String, Object>) model.get(InertiaPage.PROPS))
+                .of((String) model.remove(InertiaPage.COMPONENT))
+                .props((Map<String, Object>) model.remove(InertiaPage.PROPS))
                 .url(request.getRequestURI())
                 .version(this.inertiaVersionProvider.getVersion());
 
         String jsonPage = this.objectMapper.writeValueAsString(inertiaPage);
 
         if (isInertiaRequest(request)) {
-            renderJson(jsonPage, request, response);
+            renderJson(model, jsonPage, request, response);
         }
         else {
-            renderHtml(jsonPage, request, response);
+            model.put("page", inertiaPage);
+            model.put("pageData", jsonPage);
+            renderHtml(model, jsonPage, request, response);
         }
     }
 
-    private void renderJson(String jsonPage, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void renderJson(Map<String, Object> model, String jsonPage,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader(HttpHeaders.VARY, InertiaHeaders.INERTIA);
         response.setHeader(InertiaHeaders.INERTIA, "true");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -87,28 +86,12 @@ public class InertiaView extends AbstractView {
         response.getWriter().write(jsonPage);
     }
 
-    private void renderHtml(String jsonPage, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String inertiaTag = String.format(INERTIA_ROOT_TAG, jsonPage);
-        String html = this.template.replace(INERTIA_TEMPLATE_PLACEHOLDER, inertiaTag);
+    protected void renderHtml(Map<String, Object> model, String jsonPage,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType(MediaType.TEXT_HTML_VALUE);
-        response.setContentLength(html.length());
         response.setStatus(HttpStatus.OK.value());
-        response.getWriter().write(html);
-    }
-
-    private String createTemplate(String location) {
-        Resource resource = getWebApplicationContext().getResource(location);
-        if (!resource.isReadable()) {
-            throw new IllegalArgumentException("Missing template file " + location);
-        }
-
-        try {
-            Reader reader = new InputStreamReader(resource.getInputStream());
-            return FileCopyUtils.copyToString(reader);
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Could not read the template file" + location);
-        }
+        View inertiaView = this.viewResolver.resolveViewName(INERTIA_TEMPLATE_NAME, Locale.getDefault());
+        inertiaView.render(model, request, response);
     }
 
     /**
@@ -117,7 +100,7 @@ public class InertiaView extends AbstractView {
      * @param request The HttpServletRequest
      * @return true If the request is Inertia else false
      */
-    public static boolean isInertiaRequest(HttpServletRequest request) {
+    private boolean isInertiaRequest(HttpServletRequest request) {
         return Boolean.parseBoolean(request.getHeader(InertiaHeaders.INERTIA));
     }
 
