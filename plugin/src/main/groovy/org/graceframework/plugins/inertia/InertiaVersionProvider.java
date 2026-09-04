@@ -18,12 +18,10 @@ package org.graceframework.plugins.inertia;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
-
-import grails.config.Config;
-import grails.core.GrailsApplication;
 
 /**
  * Provides asset version for Inertia
@@ -35,29 +33,30 @@ public class InertiaVersionProvider {
 
     public static final String BEAN_NAME = "inertiaVersionProvider";
 
-    private GrailsApplication grailsApplication;
-    private Config config;
+    private final ApplicationContext applicationContext;
+    private final InertiaConfigurationProperties properties;
 
-    public InertiaVersionProvider(GrailsApplication grailsApplication) {
-        this.grailsApplication = grailsApplication;
-        this.config = grailsApplication.getConfig();
+    public InertiaVersionProvider(ApplicationContext applicationContext,
+            InertiaConfigurationProperties properties) {
+        this.applicationContext = applicationContext;
+        this.properties = properties;
     }
 
     public String getVersion() {
-        String assetVersion = this.config.getProperty(InertiaSettings.INERTIA_ASSET_VERSION);
+        String assetVersion = this.properties.getAsset().getVersion();
         if (StringUtils.hasText(assetVersion)) {
             return assetVersion;
         }
 
-        String assetUrl = this.config.getProperty(InertiaSettings.INERTIA_ASSET_URL);
+        String assetUrl = this.properties.getAsset().getUrl();
         if (StringUtils.hasText(assetUrl)) {
             String checksum = DigestUtils.md5DigestAsHex(assetUrl.getBytes(StandardCharsets.UTF_8));
             return checksum;
         }
 
-        String manifestLocation = this.config.getProperty(InertiaSettings.INERTIA_MANIFEST_LOCATION);
+        String manifestLocation = this.properties.getManifest().getLocation();
         if (StringUtils.hasText(manifestLocation)) {
-            Resource manifest = this.grailsApplication.getMainContext().getResource(manifestLocation);
+            Resource manifest = this.applicationContext.getResource(manifestLocation);
             if (manifest.exists()) {
                 try {
                     String checksum = DigestUtils.md5DigestAsHex(manifest.getInputStream());
