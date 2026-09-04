@@ -27,6 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -82,6 +83,11 @@ public class InertiaAutoConfiguration {
                 inertiaVersionProvider.getIfAvailable());
 
         return new InertiaPageRendererRegister(rendererRegistry.getIfAvailable(), inertiaPageRenderer);
+    }
+
+    @Bean
+    public InertiaView inertiaView(ApplicationContext applicationContext, InertiaVersionProvider inertiaVersionProvider) {
+        return new InertiaView(applicationContext, inertiaVersionProvider);
     }
 
     @Bean

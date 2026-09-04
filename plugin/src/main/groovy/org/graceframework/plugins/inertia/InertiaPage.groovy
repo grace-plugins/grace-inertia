@@ -74,6 +74,11 @@ class InertiaPage {
         this
     }
 
+    InertiaPage version(String version) {
+        this.version = version
+        this
+    }
+
     InertiaPage props(Map props) {
         this.props = props
         this
@@ -84,12 +89,12 @@ class InertiaPage {
         this
     }
 
-    static InertiaPage of(String component, Map props) {
-        new InertiaPage(component, props)
+    static InertiaPage of(String component) {
+        new InertiaPage(component, Collections.emptyMap())
     }
 
-    static InertiaPage of(Map props) {
-        new InertiaPage(null, props)
+    static InertiaPage of(String component, Map props) {
+        new InertiaPage(component, props)
     }
 
 }

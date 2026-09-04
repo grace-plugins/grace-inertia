@@ -55,7 +55,6 @@ public class InertiaPageMethodReturnValueHandler extends ModelAndViewMethodRetur
         }
 
         HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        boolean isInertiaRequest = HttpServletRequestExtension.isInertia(servletRequest);
         String requestUrl = HttpServletRequestExtension.getUrl(servletRequest);
 
         InertiaPage inertiaPage = (InertiaPage) returnValue;
@@ -65,7 +64,8 @@ public class InertiaPageMethodReturnValueHandler extends ModelAndViewMethodRetur
         if (!StringUtils.hasLength(inertiaPage.getVersion())) {
             inertiaPage.setVersion(this.inertiaVersionProvider.getVersion());
         }
-        ModelAndView mav = Inertia.render(isInertiaRequest, inertiaPage);
+
+        ModelAndView mav = Inertia.render(inertiaPage);
         super.handleReturnValue(mav, returnType, mavContainer, webRequest);
     }
 
