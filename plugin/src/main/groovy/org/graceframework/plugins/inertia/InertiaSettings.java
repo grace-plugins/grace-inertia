@@ -23,17 +23,17 @@ package org.graceframework.plugins.inertia;
  */
 public final class InertiaSettings {
 
-    public static final String INERTIA_ENABLED = "grails.inertia.enabled";
-    public static final String INERTIA_ASSET_URL = "grails.inertia.asset.url";
-    public static final String INERTIA_ASSET_VERSION = "grails.inertia.asset.version";
-    public static final String INERTIA_MANIFEST_LOCATION = "grails.inertia.manifest.location";
+    public static final String INERTIA_ENABLED = "inertia.enabled";
+    public static final String INERTIA_ASSET_URL = "inertia.asset.url";
+    public static final String INERTIA_ASSET_VERSION = "inertia.asset.version";
+    public static final String INERTIA_MANIFEST_LOCATION = "inertia.manifest.location";
     public static final String INERTIA_MANIFEST_OBJECT = "inertiaManifest";
-    public static final String INERTIA_TEMPLATE = "grails.inertia.template";
+    public static final String INERTIA_TEMPLATE = "inertia.template";
     public static final String INERTIA_TEMPLATE_DEFAULT = "/templates/inertia";
     public static final String INERTIA_PAGE_ATTRIBUTE = "grails.inertia.page.attribute";
-    public static final String INERTIA_SSR_TEMPLATE = "grails.inertia.ssr.template";
+    public static final String INERTIA_SSR_TEMPLATE = "inertia.ssr.template";
     public static final String INERTIA_SSR_TEMPLATE_DEFAULT = "/templates/inertia_ssr";
-    public static final String INERTIA_SSR_ENABLED = "grails.inertia.ssr.enabled";
-    public static final String INERTIA_SSR_URL = "grails.inertia.ssr.url";
+    public static final String INERTIA_SSR_ENABLED = "inertia.ssr.enabled";
+    public static final String INERTIA_SSR_URL = "inertia.ssr.url";
 
 }

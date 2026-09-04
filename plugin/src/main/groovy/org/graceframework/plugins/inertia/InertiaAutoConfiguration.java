@@ -53,7 +53,7 @@ import org.grails.plugins.web.mime.MimeTypesConfiguration;
  */
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@ConditionalOnProperty(name = "grails.inertia.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "inertia.enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(InertiaConfigurationProperties.class)
 public class InertiaAutoConfiguration {
 

@@ -23,7 +23,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Michael Yan
  * @since 0.5
  */
-@ConfigurationProperties(prefix = "grails.inertia")
+@ConfigurationProperties(prefix = "inertia")
 public class InertiaConfigurationProperties {
 
     /**
