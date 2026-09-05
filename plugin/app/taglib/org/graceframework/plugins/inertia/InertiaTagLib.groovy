@@ -29,10 +29,18 @@ class InertiaTagLib {
     CodecLookup codecLookup
 
     Closure app = { Map<String, Object> attrs, Closure body ->
-        def encoder = codecLookup.lookupEncoder('HTML')
+        def config = grailsApplication.config
         String id = attrs.id ?: 'app'
-        String page = encoder.encode(getPageAttribute())
-        out << "<div id=\"$id\" data-page=\"$page\"></div>"
+        if (config.getProperty(InertiaSettings.INERTIA_USE_SCRIPT_ELEMENT_FOR_INITIAL_PAGE, Boolean, false)) {
+            String page = getPageAttribute()
+            out << "<script data-page=\"app\" type=\"application/json\">$page</script>"
+            out << "<div id=\"$id\"></div>"
+        }
+        else {
+            def encoder = codecLookup.lookupEncoder('HTML')
+            String page = encoder.encode(getPageAttribute())
+            out << "<div id=\"$id\" data-page=\"$page\"></div>"
+        }
     }
 
     private String getPageAttribute() {
