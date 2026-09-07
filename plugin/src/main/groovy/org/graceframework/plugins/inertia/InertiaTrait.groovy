@@ -42,6 +42,7 @@ import static InertiaPage.COMPONENT
 import static InertiaPage.PROPS
 import static InertiaPage.VIEW_DATA
 import static org.grails.plugins.web.controllers.metaclass.RenderDynamicMethod.ARGUMENT_CONTEXTPATH
+import static org.grails.plugins.web.controllers.metaclass.RenderDynamicMethod.ARGUMENT_LAYOUT
 import static org.grails.plugins.web.controllers.metaclass.RenderDynamicMethod.ARGUMENT_MODEL
 import static org.grails.plugins.web.controllers.metaclass.RenderDynamicMethod.ARGUMENT_PLUGIN
 import static org.grails.plugins.web.controllers.metaclass.RenderDynamicMethod.ARGUMENT_VIEW
@@ -110,6 +111,7 @@ trait InertiaTrait {
         GrailsWebRequest webRequest = (GrailsWebRequest) RequestContextHolder.currentRequestAttributes()
         HttpServletRequest request = webRequest.request
         HttpServletResponse response = webRequest.currentResponse
+        String explicitSiteMeshLayout = argMap[ARGUMENT_LAYOUT]?.toString() ?: null
         def applicationAttributes = webRequest.attributes
 
         String version = getVersionProvider(webRequest).version
@@ -149,8 +151,8 @@ trait InertiaTrait {
             request.setAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, page)
             request.setAttribute(GrailsApplicationAttributes.CONTROLLER, null)
             request.setAttribute(GrailsApplicationAttributes.CONTROLLER_NAME_ATTRIBUTE, null)
-            request.setAttribute GrailsLayoutDecoratorMapper.LAYOUT_ATTRIBUTE, GrailsLayoutDecoratorMapper.NONE_LAYOUT
             ((GroovyObject) this).setProperty 'modelAndView', new ModelAndView(viewUri, model)
+            applySiteMeshLayout(webRequest.currentRequest, true, explicitSiteMeshLayout)
         }
     }
 
@@ -160,6 +162,18 @@ trait InertiaTrait {
             return config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME, InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME_DEFAULT)
         }
         return InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME_DEFAULT
+    }
+
+    private void applySiteMeshLayout(HttpServletRequest request, boolean renderView, String explicitSiteMeshLayout) {
+        if (explicitSiteMeshLayout == null && request.getAttribute(GrailsLayoutDecoratorMapper.LAYOUT_ATTRIBUTE) != null) {
+            // layout has been set already
+            return
+        }
+        String siteMeshLayout = explicitSiteMeshLayout != null ? explicitSiteMeshLayout :
+                (renderView ? null : GrailsLayoutDecoratorMapper.NONE_LAYOUT)
+        if (siteMeshLayout != null) {
+            request.setAttribute(GrailsLayoutDecoratorMapper.LAYOUT_ATTRIBUTE, siteMeshLayout)
+        }
     }
 
     private String getContextPath(GrailsWebRequest webRequest, Map argMap) {
