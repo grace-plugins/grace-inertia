@@ -81,7 +81,7 @@ class InertiaPageRenderer extends AbstractRenderer<InertiaPage> {
             model.put("page", inertiaPage)
             model.putAll(object.viewData)
             context.setContentType(MimeType.HTML.name)
-            context.viewName = getRootViewName()
+            context.setViewName(getRootViewName())
             context.setModel(model)
 
             String page = json.toString()
@@ -90,9 +90,7 @@ class InertiaPageRenderer extends AbstractRenderer<InertiaPage> {
             request.setAttribute(GrailsApplicationAttributes.CONTROLLER_NAME_ATTRIBUTE, null)
             request.setAttribute GrailsLayoutDecoratorMapper.LAYOUT_ATTRIBUTE, GrailsLayoutDecoratorMapper.NONE_LAYOUT
             response.setContentType GrailsWebUtil.getContentType(MimeType.HTML.name, GrailsWebUtil.DEFAULT_ENCODING)
-
             response.status = 200
-            context.setModel(inertiaPage)
         }
     }
 
