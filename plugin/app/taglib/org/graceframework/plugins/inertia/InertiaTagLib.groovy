@@ -31,7 +31,7 @@ class InertiaTagLib {
     Closure app = { Map<String, Object> attrs, Closure body ->
         def config = grailsApplication.config
         String id = attrs.id ?: 'app'
-        if (config.getProperty(InertiaSettings.INERTIA_USE_SCRIPT_ELEMENT_FOR_INITIAL_PAGE, Boolean, false)) {
+        if (config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_USE_SCRIPT_ELEMENT, Boolean, false)) {
             String page = getPageAttribute()
             out << "<script data-page=\"app\" type=\"application/json\">$page</script>"
             out << "<div id=\"$id\"></div>"

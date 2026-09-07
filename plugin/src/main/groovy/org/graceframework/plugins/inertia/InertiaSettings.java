@@ -35,6 +35,6 @@ public final class InertiaSettings {
     public static final String INERTIA_SSR_TEMPLATE_DEFAULT = "/templates/inertia_ssr";
     public static final String INERTIA_SSR_ENABLED = "inertia.ssr.enabled";
     public static final String INERTIA_SSR_URL = "inertia.ssr.url";
-    public static final String INERTIA_USE_SCRIPT_ELEMENT_FOR_INITIAL_PAGE = "inertia.use-script-element-for-initial-page";
+    public static final String INERTIA_INITIAL_PAGE_USE_SCRIPT_ELEMENT = "inertia.initial-page.use-script-element";
 
 }
