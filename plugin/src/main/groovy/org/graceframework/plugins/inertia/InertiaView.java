@@ -41,11 +41,12 @@ import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 public class InertiaView extends AbstractView {
 
     public static final String INERTIA_VIEW_NAME = "inertiaView";
-    private static final String INERTIA_TEMPLATE_NAME = "inertia";
+    private static final String INERTIA_ROOT_TEMPLATE_NAME_DEFAULT = "inertia";
 
     private final ContentNegotiatingViewResolver viewResolver;
     private final ObjectMapper objectMapper;
     private final InertiaVersionProvider inertiaVersionProvider;
+    private String defaultRootTemplateName = INERTIA_ROOT_TEMPLATE_NAME_DEFAULT;
 
     public InertiaView(ApplicationContext applicationContext, ContentNegotiatingViewResolver viewResolver, InertiaVersionProvider inertiaVersionProvider) {
         setApplicationContext(applicationContext);
@@ -53,6 +54,14 @@ public class InertiaView extends AbstractView {
         this.inertiaVersionProvider = inertiaVersionProvider;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
+
+    public String getDefaultRootTemplateName() {
+        return defaultRootTemplateName;
+    }
+
+    public void setDefaultRootTemplateName(String defaultRootTemplateName) {
+        this.defaultRootTemplateName = defaultRootTemplateName;
     }
 
     @Override
@@ -90,7 +99,7 @@ public class InertiaView extends AbstractView {
             HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.setStatus(HttpStatus.OK.value());
-        View inertiaView = this.viewResolver.resolveViewName(INERTIA_TEMPLATE_NAME, Locale.getDefault());
+        View inertiaView = this.viewResolver.resolveViewName(getDefaultRootTemplateName(), Locale.getDefault());
         inertiaView.render(model, request, response);
     }
 

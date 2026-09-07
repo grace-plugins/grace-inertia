@@ -129,7 +129,7 @@ trait InertiaTrait {
         }
         else {
             response.setContentType GrailsWebUtil.getContentType(MimeType.HTML.name, GrailsWebUtil.DEFAULT_ENCODING)
-            String viewName = argMap[ARGUMENT_VIEW] ?: InertiaSettings.INERTIA_TEMPLATE_DEFAULT
+            String viewName = argMap[ARGUMENT_VIEW] ?: getDefaultRootViewName()
             String viewUri = applicationAttributes.getNoSuffixViewURI((GroovyObject) this, viewName)
             String contextPath = getContextPath(webRequest, argMap)
             if (contextPath) {
@@ -152,6 +152,14 @@ trait InertiaTrait {
             request.setAttribute GrailsLayoutDecoratorMapper.LAYOUT_ATTRIBUTE, GrailsLayoutDecoratorMapper.NONE_LAYOUT
             ((GroovyObject) this).setProperty 'modelAndView', new ModelAndView(viewUri, model)
         }
+    }
+
+    String getDefaultRootViewName() {
+        def config = getGrailsApplication().config
+        if (config) {
+            return config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME, InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME_DEFAULT)
+        }
+        return InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME_DEFAULT
     }
 
     private String getContextPath(GrailsWebRequest webRequest, Map argMap) {

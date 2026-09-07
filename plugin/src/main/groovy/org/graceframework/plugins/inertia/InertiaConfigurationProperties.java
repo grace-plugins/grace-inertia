@@ -35,6 +35,8 @@ public class InertiaConfigurationProperties {
 
     private Manifest manifest = new Manifest();
 
+    private InitialPage initialPage = new InitialPage();
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -57,6 +59,14 @@ public class InertiaConfigurationProperties {
 
     public void setManifest(Manifest manifest) {
         this.manifest = manifest;
+    }
+
+    public InitialPage getInitialPage() {
+        return initialPage;
+    }
+
+    public void setInitialPage(InitialPage initialPage) {
+        this.initialPage = initialPage;
     }
 
     /**
@@ -108,6 +118,49 @@ public class InertiaConfigurationProperties {
 
         public void setLocation(String location) {
             this.location = location;
+        }
+
+    }
+
+    public static class InitialPage {
+
+        /**
+         * The DOM element ID used for the root Inertia element.
+         */
+        private String rootDomId = "app";
+
+        /**
+         * The root template name, default is `inertia`.
+         */
+        private String rootTemplateName = "inertia";
+
+        /**
+         * Whether the initial page data is rendered in a script element instead of the `data-page` attribute on the root div.
+         */
+        private boolean useScriptElement = false;
+
+        public String getRootDomId() {
+            return this.rootDomId;
+        }
+
+        public void setRootDomId(String rootDomId) {
+            this.rootDomId = rootDomId;
+        }
+
+        public String getRootTemplateName() {
+            return rootTemplateName;
+        }
+
+        public void setRootTemplateName(String rootTemplateName) {
+            this.rootTemplateName = rootTemplateName;
+        }
+
+        public boolean isUseScriptElement() {
+            return this.useScriptElement;
+        }
+
+        public void setUseScriptElement(boolean useScriptElement) {
+            this.useScriptElement = useScriptElement;
         }
 
     }

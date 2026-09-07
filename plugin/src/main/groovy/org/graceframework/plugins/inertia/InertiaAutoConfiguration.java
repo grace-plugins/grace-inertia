@@ -106,8 +106,11 @@ public class InertiaAutoConfiguration {
         @ConditionalOnMissingBean
         @Bean(name = InertiaView.INERTIA_VIEW_NAME)
         public InertiaView inertiaView(ApplicationContext applicationContext,
-                ContentNegotiatingViewResolver viewResolver, InertiaVersionProvider inertiaVersionProvider) {
-            return new InertiaView(applicationContext, viewResolver, inertiaVersionProvider);
+                ContentNegotiatingViewResolver viewResolver, InertiaVersionProvider inertiaVersionProvider,
+                InertiaConfigurationProperties inertiaConfigurationProperties) {
+            InertiaView inertiaView = new InertiaView(applicationContext, viewResolver, inertiaVersionProvider);
+            inertiaView.setDefaultRootTemplateName(inertiaConfigurationProperties.getInitialPage().getRootTemplateName());
+            return inertiaView;
         }
 
         @Bean

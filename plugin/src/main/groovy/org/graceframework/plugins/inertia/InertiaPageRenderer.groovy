@@ -81,8 +81,7 @@ class InertiaPageRenderer extends AbstractRenderer<InertiaPage> {
             model.put("page", inertiaPage)
             model.putAll(object.viewData)
             context.setContentType(MimeType.HTML.name)
-            String viewName = this.config.getProperty(InertiaSettings.INERTIA_TEMPLATE, String, InertiaSettings.INERTIA_TEMPLATE_DEFAULT)
-            context.viewName = viewName
+            context.viewName = getRootViewName()
             context.setModel(model)
 
             String page = json.toString()
@@ -95,6 +94,11 @@ class InertiaPageRenderer extends AbstractRenderer<InertiaPage> {
             response.status = 200
             context.setModel(inertiaPage)
         }
+    }
+
+    String getRootViewName() {
+        return this.config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME,
+                String, InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME_DEFAULT)
     }
 
     private boolean isInertiaRequest(HttpServletRequest request) {
