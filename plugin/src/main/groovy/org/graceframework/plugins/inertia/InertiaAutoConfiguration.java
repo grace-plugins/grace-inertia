@@ -104,7 +104,7 @@ public class InertiaAutoConfiguration {
         }
 
         @ConditionalOnMissingBean
-        @Bean(name = InertiaView.INERTIA_VIEW_NAME)
+        @Bean(name = InertiaView.INERTIA_VIEW_BEAN_NAME)
         public InertiaView inertiaView(ApplicationContext applicationContext,
                 ContentNegotiatingViewResolver viewResolver, InertiaVersionProvider inertiaVersionProvider,
                 InertiaConfigurationProperties inertiaConfigurationProperties) {

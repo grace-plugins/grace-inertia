@@ -40,7 +40,7 @@ import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
  */
 public class InertiaView extends AbstractView {
 
-    public static final String INERTIA_VIEW_NAME = "inertiaView";
+    public static final String INERTIA_VIEW_BEAN_NAME = "inertiaView";
     private static final String INERTIA_ROOT_TEMPLATE_NAME_DEFAULT = "inertia";
 
     private final ContentNegotiatingViewResolver viewResolver;

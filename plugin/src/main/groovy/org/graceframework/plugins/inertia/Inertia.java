@@ -83,7 +83,7 @@ public class Inertia {
      * @return ModelAndView
      */
     public static ModelAndView render(String component, String url, Map<String, Object> props, Map<String, Object> viewData) {
-        ModelAndView mav = new ModelAndView(InertiaView.INERTIA_VIEW_NAME)
+        ModelAndView mav = new ModelAndView(InertiaView.INERTIA_VIEW_BEAN_NAME)
                 .addObject(InertiaPage.COMPONENT, component)
                 .addObject(InertiaPage.URL, url)
                 .addObject(InertiaPage.PROPS, props)
