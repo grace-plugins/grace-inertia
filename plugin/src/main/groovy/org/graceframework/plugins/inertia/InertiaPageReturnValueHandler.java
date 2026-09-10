@@ -32,11 +32,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ModelAndViewMethodR
  * @author Michael Yan
  * @since 0.5
  */
-public class InertiaPageMethodReturnValueHandler extends ModelAndViewMethodReturnValueHandler implements HandlerMethodReturnValueHandler {
+public class InertiaPageReturnValueHandler extends ModelAndViewMethodReturnValueHandler implements HandlerMethodReturnValueHandler {
 
     private final InertiaVersionProvider inertiaVersionProvider;
 
-    public InertiaPageMethodReturnValueHandler(InertiaVersionProvider inertiaVersionProvider) {
+    public InertiaPageReturnValueHandler(InertiaVersionProvider inertiaVersionProvider) {
         this.inertiaVersionProvider = inertiaVersionProvider;
     }
 

@@ -139,7 +139,7 @@ public class InertiaAutoConfiguration {
 
             @Override
             public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
-                handlers.add(new InertiaPageMethodReturnValueHandler(this.inertiaVersionProvider));
+                handlers.add(new InertiaPageReturnValueHandler(this.inertiaVersionProvider));
                 handlers.add(new InertiaResponseReturnValueHandler(this.viewResolver, this.inertiaVersionProvider));
             }
 
