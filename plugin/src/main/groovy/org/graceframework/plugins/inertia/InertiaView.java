@@ -97,6 +97,7 @@ public class InertiaView extends AbstractView {
 
     protected void renderHtml(Map<String, Object> model, String jsonPage,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.setAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, jsonPage);
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.setStatus(HttpStatus.OK.value());
         View inertiaView = this.viewResolver.resolveViewName(getDefaultRootTemplateName(), Locale.getDefault());
