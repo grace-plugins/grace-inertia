@@ -28,8 +28,4 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class HttpServletResponseExtension {
 
-    static InertiaResponse getInertia(HttpServletResponse response) {
-        new InertiaResponse(response)
-    }
-
 }
