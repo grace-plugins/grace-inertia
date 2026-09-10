@@ -13,39 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.graceframework.plugins.inertia
+package org.graceframework.plugins.inertia;
 
-import javax.servlet.http.HttpServletResponse
-
-import groovy.transform.CompileStatic
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Inertia Response {link https://inertiajs.com/the-protocol#inertia-responses}
+ * See <a href="https://inertiajs.com/the-protocol#inertia-responses">Inertia Response</a>
  *
  * @author Michael Yan
  * @since 0.1
  */
-@CompileStatic
-class InertiaResponse {
+public class InertiaResponse {
 
-    private final HttpServletResponse response
+    private final HttpServletResponse response;
 
-    InertiaResponse(HttpServletResponse response) {
-        this.response = response
+    public InertiaResponse(HttpServletResponse response) {
+        this.response = response;
     }
 
     /**
-     * The server may immediately returns a 409 Conflict response if the asset versions are different, and includes the URL in a X-Inertia-Location header.
+     * The server may immediately return a 409 Conflict response if the asset versions are different, and includes the URL in a X-Inertia-Location header.
      * This header is necessary, since server-side redirects may have occurred. This tells Inertia what the final intended destination URL is.
      *
-     * @param location
+     * @param location The location header value
      */
-    void setLocation(String location) {
-        setHeaderValue(InertiaHeaders.INERTIA_LOCATION, location)
+    public void setLocation(String location) {
+        setHeaderValue(InertiaHeaders.INERTIA_LOCATION, location);
     }
 
-    void setHeaderValue(String name, Object value) {
-        this.response.setHeader(name, (value == null) ? "" : value.toString())
+    public void setHeaderValue(String name, Object value) {
+        this.response.setHeader(name, (value == null) ? "" : value.toString());
     }
 
 }
