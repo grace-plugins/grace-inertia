@@ -74,15 +74,13 @@ public class InertiaView extends AbstractView {
                 .url(request.getRequestURI())
                 .version(this.inertiaVersionProvider.getVersion());
 
-        String jsonPage = this.objectMapper.writeValueAsString(inertiaPage);
-
         if (isInertiaRequest(request)) {
+            String jsonPage = this.objectMapper.writeValueAsString(inertiaPage);
             renderJson(model, jsonPage, request, response);
         }
         else {
-            model.put("page", inertiaPage);
-            model.put("pageData", jsonPage);
-            renderHtml(model, jsonPage, request, response);
+            model.put(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, inertiaPage);
+            renderHtml(model, request, response);
         }
     }
 
@@ -95,9 +93,8 @@ public class InertiaView extends AbstractView {
         response.getWriter().write(jsonPage);
     }
 
-    protected void renderHtml(Map<String, Object> model, String jsonPage,
+    protected void renderHtml(Map<String, Object> model,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request.setAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, jsonPage);
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.setStatus(HttpStatus.OK.value());
         View inertiaView = this.viewResolver.resolveViewName(getDefaultRootTemplateName(), Locale.getDefault());

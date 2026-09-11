@@ -15,10 +15,12 @@
  */
 package org.graceframework.plugins.inertia
 
+import grails.converters.JSON
+
 import org.grails.encoder.CodecLookup
 
 /**
- *
+ * Inertia Tag
  * @author Michael Yan
  * @since 0.5
  */
@@ -31,20 +33,21 @@ class InertiaTagLib {
     Closure app = { Map<String, Object> attrs, Closure body ->
         def config = grailsApplication.config
         String id = attrs.id ?: config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_DOM_ID, String, 'app')
+        InertiaPage inertiaPage = getInertiaPage()
+        JSON json = new JSON(inertiaPage)
         if (config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_USE_SCRIPT_ELEMENT, Boolean, false)) {
-            String page = getPageAttribute()
-            out << "<script data-page=\"$id\" type=\"application/json\">$page</script>"
+            out << "<script data-page=\"$id\" type=\"application/json\">${json.toString()}</script>"
             out << "<div id=\"$id\"></div>"
         }
         else {
             def encoder = codecLookup.lookupEncoder('HTML')
-            String page = encoder.encode(getPageAttribute())
+            String page = encoder.encode(json.toString())
             out << "<div id=\"$id\" data-page=\"$page\"></div>"
         }
     }
 
-    private String getPageAttribute() {
-        request.getAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE)
+    private InertiaPage getInertiaPage() {
+        (InertiaPage) request.getAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE)
     }
 
 }

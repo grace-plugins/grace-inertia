@@ -28,7 +28,7 @@ public final class InertiaSettings {
     public static final String INERTIA_ASSET_VERSION = "inertia.asset.version";
     public static final String INERTIA_MANIFEST_LOCATION = "inertia.manifest.location";
     public static final String INERTIA_MANIFEST_OBJECT = "inertiaManifest";
-    public static final String INERTIA_PAGE_ATTRIBUTE = "grails.inertia.page.attribute";
+    public static final String INERTIA_PAGE_ATTRIBUTE = "page";
     public static final String INERTIA_SSR_TEMPLATE = "inertia.ssr.template";
     public static final String INERTIA_SSR_TEMPLATE_DEFAULT = "/templates/inertia_ssr";
     public static final String INERTIA_SSR_ENABLED = "inertia.ssr.enabled";

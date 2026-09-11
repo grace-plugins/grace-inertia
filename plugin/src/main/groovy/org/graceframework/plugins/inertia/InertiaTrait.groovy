@@ -125,7 +125,7 @@ trait InertiaTrait {
             response.setHeader(HttpHeaders.VARY, InertiaHeaders.INERTIA)
             response.setHeader(InertiaHeaders.INERTIA, 'true')
             JSON json = new JSON(inertiaPage)
-            json.setExcludes(['viewData'])
+            json.setExcludes([VIEW_DATA])
             json.render response
             webRequest.renderView = false
         }
@@ -145,10 +145,7 @@ trait InertiaTrait {
             else {
                 model = [:]
             }
-            JSON json = new JSON(inertiaPage)
-            json.setExcludes(['viewData'])
-            String page = json.toString()
-            request.setAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, page)
+            model[InertiaSettings.INERTIA_PAGE_ATTRIBUTE] = inertiaPage
             request.setAttribute(GrailsApplicationAttributes.CONTROLLER, null)
             request.setAttribute(GrailsApplicationAttributes.CONTROLLER_NAME_ATTRIBUTE, null)
             ((GroovyObject) this).setProperty 'modelAndView', new ModelAndView(viewUri, model)

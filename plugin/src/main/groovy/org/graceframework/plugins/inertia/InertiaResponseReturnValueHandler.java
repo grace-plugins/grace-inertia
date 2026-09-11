@@ -142,26 +142,23 @@ public class InertiaResponseReturnValueHandler implements HandlerMethodReturnVal
                 .url(requestUrl)
                 .version(this.inertiaVersionProvider.getVersion());
 
-        String jsonPage = this.objectMapper.writeValueAsString(inertiaPage);
-
         if (isInertiaRequest(inputMessage.getServletRequest())) {
+            String jsonPage = this.objectMapper.writeValueAsString(inertiaPage);
             mavContainer.setRequestHandled(true);
             renderJson(jsonPage, inputMessage.getServletRequest(), outputMessage.getServletResponse());
         }
         else {
             Map<String, Object> model = new LinkedHashMap<>();
-            model.put("page", inertiaPage);
-            model.put("pageData", jsonPage);
+            model.put(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, inertiaPage);
             model.putAll(inertiaResponse.getViewData());
-            renderHtml(model, jsonPage, inputMessage.getServletRequest(), outputMessage.getServletResponse());
+            renderHtml(model, inputMessage.getServletRequest(), outputMessage.getServletResponse());
         }
 
         // Ensure headers are flushed even if no body was written.
         outputMessage.flush();
     }
 
-    protected void renderJson(String jsonPage,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void renderJson(String jsonPage, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader(HttpHeaders.VARY, InertiaHeaders.INERTIA);
         response.setHeader(InertiaHeaders.INERTIA, "true");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -169,9 +166,7 @@ public class InertiaResponseReturnValueHandler implements HandlerMethodReturnVal
         response.getWriter().write(jsonPage);
     }
 
-    protected void renderHtml(Map<String, Object> model, String jsonPage,
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request.setAttribute(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, jsonPage);
+    protected void renderHtml(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.setStatus(HttpStatus.OK.value());
         View inertiaView = this.viewResolver.resolveViewName(getDefaultRootTemplateName(), Locale.getDefault());
