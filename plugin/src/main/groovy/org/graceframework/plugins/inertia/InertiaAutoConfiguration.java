@@ -114,9 +114,8 @@ public class InertiaAutoConfiguration {
         }
 
         @Bean
-        public InertiaWebMvcConfigurer inertiaWebMvcConfigurer(ContentNegotiatingViewResolver viewResolver,
-                InertiaVersionProvider inertiaVersionProvider) {
-            return new InertiaWebMvcConfigurer(viewResolver, inertiaVersionProvider);
+        public InertiaWebMvcConfigurer inertiaWebMvcConfigurer(InertiaVersionProvider inertiaVersionProvider) {
+            return new InertiaWebMvcConfigurer(inertiaVersionProvider);
         }
 
         /**
@@ -124,11 +123,9 @@ public class InertiaAutoConfiguration {
          */
         public static class InertiaWebMvcConfigurer implements WebMvcConfigurer {
 
-            private final ContentNegotiatingViewResolver viewResolver;
             private final InertiaVersionProvider inertiaVersionProvider;
 
-            InertiaWebMvcConfigurer(ContentNegotiatingViewResolver viewResolver, InertiaVersionProvider inertiaVersionProvider) {
-                this.viewResolver = viewResolver;
+            InertiaWebMvcConfigurer(InertiaVersionProvider inertiaVersionProvider) {
                 this.inertiaVersionProvider = inertiaVersionProvider;
             }
 
@@ -140,7 +137,7 @@ public class InertiaAutoConfiguration {
             @Override
             public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
                 handlers.add(new InertiaPageReturnValueHandler(this.inertiaVersionProvider));
-                handlers.add(new InertiaResponseReturnValueHandler(this.viewResolver, this.inertiaVersionProvider));
+                handlers.add(new InertiaResponseReturnValueHandler(this.inertiaVersionProvider));
             }
 
         }

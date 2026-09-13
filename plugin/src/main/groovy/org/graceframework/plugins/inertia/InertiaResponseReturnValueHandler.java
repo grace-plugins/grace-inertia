@@ -18,9 +18,7 @@ package org.graceframework.plugins.inertia;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,10 +44,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
-import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
 /**
  * HandlerMethodReturnValueHandler to handle return value of {@link InertiaResponse}.
@@ -62,22 +58,11 @@ public class InertiaResponseReturnValueHandler implements HandlerMethodReturnVal
     private static final String INERTIA_ROOT_TEMPLATE_NAME_DEFAULT = "inertia";
     private final InertiaVersionProvider inertiaVersionProvider;
     private final ObjectMapper objectMapper;
-    private final ContentNegotiatingViewResolver viewResolver;
-    private String defaultRootTemplateName = INERTIA_ROOT_TEMPLATE_NAME_DEFAULT;
 
-    public InertiaResponseReturnValueHandler(ContentNegotiatingViewResolver viewResolver, InertiaVersionProvider inertiaVersionProvider) {
-        this.viewResolver = viewResolver;
+    public InertiaResponseReturnValueHandler(InertiaVersionProvider inertiaVersionProvider) {
         this.inertiaVersionProvider = inertiaVersionProvider;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    }
-
-    public String getDefaultRootTemplateName() {
-        return this.defaultRootTemplateName;
-    }
-
-    public void setDefaultRootTemplateName(String defaultRootTemplateName) {
-        this.defaultRootTemplateName = defaultRootTemplateName;
     }
 
     @Override
@@ -148,10 +133,10 @@ public class InertiaResponseReturnValueHandler implements HandlerMethodReturnVal
             renderJson(jsonPage, inputMessage.getServletRequest(), outputMessage.getServletResponse());
         }
         else {
-            Map<String, Object> model = new LinkedHashMap<>();
+            Map<String, Object> model = mavContainer.getModel();
             model.put(InertiaSettings.INERTIA_PAGE_ATTRIBUTE, inertiaPage);
             model.putAll(inertiaResponse.getViewData());
-            renderHtml(model, inputMessage.getServletRequest(), outputMessage.getServletResponse());
+            mavContainer.setView(INERTIA_ROOT_TEMPLATE_NAME_DEFAULT);
         }
 
         // Ensure headers are flushed even if no body was written.
@@ -164,13 +149,6 @@ public class InertiaResponseReturnValueHandler implements HandlerMethodReturnVal
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.OK.value());
         response.getWriter().write(jsonPage);
-    }
-
-    protected void renderHtml(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setContentType(MediaType.TEXT_HTML_VALUE);
-        response.setStatus(HttpStatus.OK.value());
-        View inertiaView = this.viewResolver.resolveViewName(getDefaultRootTemplateName(), Locale.getDefault());
-        inertiaView.render(model, request, response);
     }
 
     /**
