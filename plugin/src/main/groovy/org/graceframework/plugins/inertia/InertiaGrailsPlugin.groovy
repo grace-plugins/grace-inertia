@@ -26,7 +26,7 @@ import grails.util.GrailsUtil
  */
 class InertiaGrailsPlugin extends Plugin {
 
-    def version = '0.5.0-SNAPSHOT'
+    def version = '0.6.0-SNAPSHOT'
     def grailsVersion = "5.0.0 > *"
     def dependsOn = [controllers: grailsVersion]
     def observe = ['controllers']
