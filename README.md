@@ -4,8 +4,8 @@
 [![Grace Document](https://img.shields.io/badge/Grace_Document-latest-blue?style=flat&logo=asciidoctor&logoColor=E40046&labelColor=ffffff&color=f49b06)](https://plugins.graceframework.org/grace-inertia/latest/)
 [![Grace on X](https://img.shields.io/twitter/follow/graceframework?style=social)](https://x.com/graceframework)
 
-[![Groovy Version](https://img.shields.io/badge/Groovy-3.0.22-blue?style=flat&color=4298b8)](https://groovy-lang.org/releasenotes/groovy-3.0.html)
-[![Grace Version](https://img.shields.io/badge/Grace-2022.2.8-blue?style=flat&color=f49b06)](https://github.com/graceframework/grace-framework/releases/tag/v2022.2.8)
+[![Groovy Version](https://img.shields.io/badge/Groovy-3.0.23-blue?style=flat&color=4298b8)](https://groovy-lang.org/releasenotes/groovy-3.0.html)
+[![Grace Version](https://img.shields.io/badge/Grace-2022.2.9-blue?style=flat&color=f49b06)](https://github.com/graceframework/grace-framework/releases/tag/v2022.2.9)
 
 # Grace with Inertia
 
@@ -85,9 +85,13 @@ cd grace-inertia
 
 ## Roadmap
 
-### 1.x
 
-* Inertia 1.x
+| Plugin Version | Grace Version | Inertia.js |
+|----------------|---------------|------------|
+| 2.0.x          | 2024.0+       | 3.x        |
+| 1.0.x          | 2023.0+       | 3.x        |
+| 0.5+           | 2022.0+       | 2.x        |
+
 
 ## License
 
