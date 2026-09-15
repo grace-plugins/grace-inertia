@@ -15,6 +15,8 @@
  */
 package org.graceframework.plugins.inertia
 
+import org.springframework.beans.factory.annotation.Autowired
+
 import grails.converters.JSON
 
 import org.grails.encoder.CodecLookup
@@ -30,12 +32,15 @@ class InertiaTagLib {
 
     CodecLookup codecLookup
 
+    @Autowired
+    InertiaConfigurationProperties inertiaProperties
+
     Closure app = { Map<String, Object> attrs, Closure body ->
         def config = grailsApplication.config
-        String id = attrs.id ?: config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_DOM_ID, String, 'app')
+        String id = attrs.id ?: inertiaProperties.initialPage.rootDomId
         InertiaPage inertiaPage = getInertiaPage()
         JSON json = new JSON(inertiaPage)
-        if (config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_USE_SCRIPT_ELEMENT, Boolean, false)) {
+        if (inertiaProperties.initialPage.useScriptElement) {
             out << "<script data-page=\"$id\" type=\"application/json\">${json.toString()}</script>"
             out << "<div id=\"$id\"></div>"
         }
