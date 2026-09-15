@@ -36,6 +36,7 @@ dependencies {
     compileOnly "org.graceframework:grace-plugin-rest"
     compileOnly "org.graceframework:grace-web-common"
     compileOnly "com.fasterxml.jackson.core:jackson-databind"
+    compileOnly "org.slf4j:slf4j-simple" // Used for compileGroovyPages task
 }
 
 tasks.withType(Sign) {
