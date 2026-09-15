@@ -30,7 +30,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
@@ -353,7 +352,7 @@ public class InertiaResponse {
         /**
          * Build the response entity with no body.
          * @return the response entity
-         * @see ResponseEntity.BodyBuilder#body(Object)
+         * @see InertiaResponse.BodyBuilder#props(Map)
          */
         InertiaResponse build();
     }
