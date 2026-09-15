@@ -40,6 +40,7 @@ class InertiaTagLib {
         String id = attrs.id ?: inertiaProperties.initialPage.rootDomId
         InertiaPage inertiaPage = getInertiaPage()
         JSON json = new JSON(inertiaPage)
+        json.setExcludes([InertiaPage.VIEW_DATA])
         if (inertiaProperties.initialPage.useScriptElement) {
             out << "<script data-page=\"$id\" type=\"application/json\">${json.toString()}</script>"
             out << "<div id=\"$id\"></div>"
