@@ -26,6 +26,8 @@ public final class InertiaSettings {
     public static final String INERTIA_ENABLED = "inertia.enabled";
     public static final String INERTIA_ASSET_URL = "inertia.asset.url";
     public static final String INERTIA_ASSET_VERSION = "inertia.asset.version";
+    public static final String INERTIA_ERRORS = "inertia.errors";
+    public static final String INERTIA_ERRORS_ALWAYS_INCLUDE = "inertia.errors.always-include";
     public static final String INERTIA_MANIFEST_LOCATION = "inertia.manifest.location";
     public static final String INERTIA_MANIFEST_OBJECT = "inertiaManifest";
     public static final String INERTIA_PAGE_ATTRIBUTE = "page";

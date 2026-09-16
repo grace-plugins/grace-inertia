@@ -25,6 +25,7 @@ import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.servlet.ModelAndView
 
 import grails.artefact.Enhances
+import grails.artefact.controller.support.ResponseRedirector
 import grails.artefact.controller.support.ResponseRenderer
 import grails.converters.JSON
 import grails.plugins.GrailsPlugin
@@ -54,9 +55,9 @@ import static org.grails.plugins.web.controllers.metaclass.RenderDynamicMethod.A
  * @since 0.5
  */
 @CompileStatic
-@SelfType(ResponseRenderer)
+@SelfType([ResponseRenderer, ResponseRedirector])
 @Enhances(['Controller', 'Interceptor'])
-trait InertiaTrait {
+trait InertiaTrait implements ResponseRedirector {
 
     private GrailsPluginManager pluginManager
     private InertiaVersionProvider versionProvider
@@ -115,7 +116,8 @@ trait InertiaTrait {
         def applicationAttributes = webRequest.attributes
 
         String version = getVersionProvider(webRequest).version
-        InertiaPage inertiaPage = InertiaPage.of(component, (Map) argMap[PROPS] ?: argMap)
+        Map mergedProps = mergeProps((Map) argMap[PROPS])
+        InertiaPage inertiaPage = InertiaPage.of(component, mergedProps ?: argMap)
         inertiaPage.setVersion(version)
         inertiaPage.setUrl(HttpServletRequestExtension.getUrl(request))
 
@@ -153,12 +155,43 @@ trait InertiaTrait {
         }
     }
 
+    @Generated
+    void redirect(Map argMap) {
+        if (argMap.containsKey(INERTIA)) {
+            Map inertia = (Map) argMap[INERTIA]
+            Map inertiaErrors = (Map) inertia['errors']
+            if (inertiaErrors) {
+                webRequest.session.setAttribute(InertiaSettings.INERTIA_ERRORS, inertiaErrors)
+            }
+        }
+        webRequest.currentResponse.setHeader(InertiaHeaders.INERTIA, 'true')
+        webRequest.currentResponse.setHeader(HttpHeaders.VARY, InertiaHeaders.INERTIA)
+        super.redirect(argMap)
+    }
+
     String getDefaultRootViewName() {
         def config = getGrailsApplication().config
         if (config) {
             return config.getProperty(InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME, InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME_DEFAULT)
         }
         return InertiaSettings.INERTIA_INITIAL_PAGE_ROOT_TEMPLATE_NAME_DEFAULT
+    }
+
+    private Map mergeProps(Map props) {
+        Map merged = new LinkedHashMap()
+        def config = getGrailsApplication().config
+        def includeErrors = config.getProperty(InertiaSettings.INERTIA_ERRORS_ALWAYS_INCLUDE, Boolean, Boolean.FALSE)
+        Map inertiaErrors = (Map) webRequest.session.getAttribute(InertiaSettings.INERTIA_ERRORS)
+        if (inertiaErrors) {
+            merged.put('errors', inertiaErrors)
+        }
+        else if (includeErrors) {
+            merged.put('errors', [:])
+        }
+        if (props) {
+            merged.putAll(props)
+        }
+        merged
     }
 
     private void applySiteMeshLayout(HttpServletRequest request, boolean renderView, String explicitSiteMeshLayout) {

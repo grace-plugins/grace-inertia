@@ -53,6 +53,10 @@ class InertiaInterceptor {
             }
         }
 
+        if (!shouldKeepInertiaSessionOptions(response.status)) {
+            session.removeAttribute(InertiaSettings.INERTIA_ERRORS)
+        }
+
         true
     }
 
@@ -74,6 +78,10 @@ class InertiaInterceptor {
             this.versionProvider = grailsApplication.mainContext.getBean(InertiaVersionProvider.BEAN_NAME)
         }
         this.versionProvider
+    }
+
+    private boolean shouldKeepInertiaSessionOptions(int status) {
+        status in [301, 302, 303, 307, 308]
     }
 
     private boolean isVersionStale() {
