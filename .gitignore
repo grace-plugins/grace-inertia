@@ -10,3 +10,6 @@ out/
 .project
 .settings
 .classpath
+node_modules/
+src/main/resources/public/dist/
+src/main/resources/ssr/

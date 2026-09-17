@@ -14,7 +14,9 @@
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
+    <logger name="org.hibernate.SQL" level="info" />
+    <logger name="org.hibernate.type.descriptor.sql" level="info" />
     <logger name="org.hibernate.orm.deprecation" level="error" />
-    <logger name="org.grails.plugins.support" level="debug" />
+    <logger name="org.grails.plugins.support" level="info" />
     <logger name="grace.demos.Application" level="debug" />
 </configuration>

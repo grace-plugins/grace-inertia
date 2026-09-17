@@ -119,7 +119,7 @@ environments:
             url: jdbc:h2:mem:inertia_test;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
     production:
         dataSource:
-            dbCreate: none
+            dbCreate: create-drop
             url: jdbc:h2:./inertia_prod;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
             properties:
                 jmxEnabled: true
@@ -139,3 +139,15 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+---
+inertia:
+    initial-page:
+        root-dom-id: 'inertia-app'
+        root-template-name: /inertia
+        use-script-element-for: false
+    # asset:
+    #     version: '1.0'
+    errors:
+        always-include: true
+    manifest:
+        location: 'classpath:public/dist/.vite/manifest.json'
